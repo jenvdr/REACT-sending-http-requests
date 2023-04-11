@@ -17,6 +17,12 @@ function App() {
       openingText: 'This is the second opening text of the movie',
       releaseDate: '2021-05-19',
     },
+    {
+      id: 3,
+      title: 'Some Dummy Movie 3',
+      openingText: 'This is the third opening text of the movie',
+      releaseDate: '2023-05-19',
+    },
   ];
 
   return (
