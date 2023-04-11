@@ -1,12 +1,14 @@
 import React, {useState, useEffect, useCallback} from 'react';
 
 import MoviesList from './components/Movies/MoviesList';
+import AddMovie from './components/Movies/AddMovie';
 import './App.css';
 
 function App() {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+
   const fetchMoviesHandler = useCallback(async () => {
     setIsLoading(true);
     setError(null);
@@ -38,6 +40,10 @@ function App() {
     fetchMoviesHandler();
   }, [fetchMoviesHandler]);
 
+  function addMovieHandler(movie) {
+    console.log(movie);
+  }
+
   let content;
 
   if (movies.length > 0) {
@@ -52,6 +58,9 @@ function App() {
 
   return (
     <React.Fragment>
+      <section>
+        <AddMovie onAddMovie={addMovieHandler} />
+      </section>
       <section>
         <button onClick={fetchMoviesHandler}>Fetch Movies</button>
       </section>
