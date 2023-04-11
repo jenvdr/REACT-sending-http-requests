@@ -1,6 +1,6 @@
 import React from 'react';
 
-import MoviesList from './components/MoviesList';
+import MoviesList from './components/Movies/MoviesList';
 import './App.css';
 
 function App() {
@@ -16,6 +16,12 @@ function App() {
       title: 'Some Dummy Movie 2',
       openingText: 'This is the second opening text of the movie',
       releaseDate: '2021-05-19',
+    },
+    {
+      id: 3,
+      title: 'Some Dummy Movie 3',
+      openingText: 'This is the third opening text of the movie',
+      releaseDate: '2023-05-19',
     },
   ];
 
