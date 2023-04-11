@@ -11,9 +11,10 @@ function App() {
     }).then(data => {
       const transformedMovies = data.results.map(result => {
         return {
+          id: result.episode_id,
           title: result.title,
-          releaseDate: "release_date",
-          openingText: "opening_crawl",
+          releaseDate: result.release_date,
+          openingText: result.opening_crawl,
         }
       })
       setMovies(transformedMovies);
@@ -23,7 +24,7 @@ function App() {
   return (
     <React.Fragment>
       <section>
-        <button>Fetch Movies</button>
+        <button onClick={fetchMoviesHandler}>Fetch Movies</button>
       </section>
       <section>
         <MoviesList movies={movies}/>
