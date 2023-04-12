@@ -1,31 +1,83 @@
-import React from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 
-import MoviesList from './components/MoviesList';
+import MoviesList from './components/Movies/MoviesList';
+import AddMovie from './components/Movies/AddMovie';
 import './App.css';
 
 function App() {
-  const dummyMovies = [
-    {
-      id: 1,
-      title: 'Some Dummy Movie',
-      openingText: 'This is the opening text of the movie',
-      releaseDate: '2021-05-18',
-    },
-    {
-      id: 2,
-      title: 'Some Dummy Movie 2',
-      openingText: 'This is the second opening text of the movie',
-      releaseDate: '2021-05-19',
-    },
-  ];
+  const [movies, setMovies] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const fetchMoviesHandler = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await fetch('https://react-http-88d4a-default-rtdb.europe-west1.firebasedatabase.app/movies.json');
+
+      if (!response.ok) {
+        throw new Error('Something went wrong here!');
+      }
+
+      const data = await response.json();
+
+      const loadedMovies = [];
+
+      for (const key in data) {
+        const movieObject = {
+          id: key,
+          title: data[key].title,
+          releaseDate: data[key].releaseDate,
+          openingText: data[key].openingText,
+        }
+        loadedMovies.push(movieObject);
+      }
+
+      setMovies(loadedMovies);
+    } catch (error) {
+      setError(error.message);
+    }
+    setIsLoading(false);
+  }, []);
+
+  useEffect(() => {
+    fetchMoviesHandler();
+  }, [fetchMoviesHandler]);
+
+  async function addMovieHandler(movie) {
+    const response = await fetch('https://react-http-88d4a-default-rtdb.europe-west1.firebasedatabase.app/movies.json', {
+      method: 'POST',
+      body: JSON.stringify(movie),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    const data = await response.json();
+    console.log(data);
+  }
+
+  let content;
+
+  if (movies.length > 0) {
+    content = <MoviesList movies={movies}/>
+  } else if (error) {
+    content = <p>{error}</p>
+  } else if (isLoading) {
+    content = <p>Loading...</p>
+  } else {
+    content = <p>Found no movies.</p>
+  }
 
   return (
     <React.Fragment>
       <section>
-        <button>Fetch Movies</button>
+        <AddMovie onAddMovie={addMovieHandler} />
       </section>
       <section>
-        <MoviesList movies={dummyMovies} />
+        <button onClick={fetchMoviesHandler}>Fetch Movies</button>
+      </section>
+      <section>
+        {content}
       </section>
     </React.Fragment>
   );
